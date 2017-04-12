@@ -31,8 +31,11 @@ vignette("auth", "rtweet")
 
 Make sure you've given the token "write" access (permission)
 which you can check through your Twitter account.
-Uncomment next line to open browser to Twitter's app page.
-browseURL("https://apps.twitter.com")
+
+```{r}
+## Uncomment next line to open browser to Twitter's app page.
+## browseURL("https://apps.twitter.com")
+```
 
 If you already saved your token as an environment variable, you can
 fetch it using the get_tokens() function.
@@ -63,10 +66,10 @@ my_screen_name
 
 Read jeopardy data.
 
+
 ```{r}
 jeop <- readRDS("../data/joepardy.rds")
 ```
-
 
 ## Posting the CLUE status on Twitter
 

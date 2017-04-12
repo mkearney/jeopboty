@@ -19,7 +19,12 @@ If you haven't created and saved a personal access Twitter API token, do it now 
 vignette("auth", "rtweet")
 ```
 
-Make sure you've given the token "write" access (permission) which you can check through your Twitter account. Uncomment next line to open browser to Twitter's app page. browseURL("<https://apps.twitter.com>")
+Make sure you've given the token "write" access (permission) which you can check through your Twitter account.
+
+``` r
+## Uncomment next line to open browser to Twitter's app page.
+## browseURL("https://apps.twitter.com")
+```
 
 If you already saved your token as an environment variable, you can fetch it using the get\_tokens() function.
 
