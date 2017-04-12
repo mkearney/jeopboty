@@ -1,3 +1,11 @@
+---
+title: "jeopboty"
+output:
+  github_document:
+    html_preview: false
+---
+
+
 
 # My #jeopboty bot
 
@@ -153,4 +161,10 @@ Post ANSWER status to Twitter.
 
 ```{r}
 post_tweet(answer, token = token)
+```
+
+
+
+```{r, include = FALSE}
+rmarkdown::render("README.Rmd")
 ```
