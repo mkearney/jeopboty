@@ -1,13 +1,9 @@
 ---
-title: "jeopboty"
+title: "My #jeopboty bot"
 output:
   github_document:
     html_preview: false
 ---
-
-
-
-# My #jeopboty bot
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(

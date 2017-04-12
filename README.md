@@ -1,8 +1,5 @@
-jeopboty
-================
-
 My \#jeopboty bot
-=================
+================
 
 Reading data and the \[correct\] Twitter token
 ----------------------------------------------
