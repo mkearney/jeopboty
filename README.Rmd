@@ -10,7 +10,8 @@ output:
 # My #jeopboty bot
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+knitr::opts_chunk$set(
+    echo = TRUE, eval = FALSE, comment = "#>", collapse = TRUE)
 ```
 
 ## Reading data and the [correct] Twitter token
