@@ -8,13 +8,19 @@ The [bot script](R/jeopboty.r) can be found in the R folder. It's also pasted be
 
 ``` r
 
+## save current directory
+od <- getwd()
+
+## for now, go to R dir in jeopboty
+setwd("~/r/jeopboty/R")
+
 ## Reading data and the [correct] Twitter token
 ## load rtweet
 library(rtweet)
 
-## If you haven't created and saved a personal access
-## Twitter API token, do it now following these instructions:
-vignette("auth", "rtweet")
+## If you haven't created and saved a personal access Twitter API
+## token, do it now following these instructions (uncomment next line):
+## vignette("auth", "rtweet")
 
 ## Make sure you've given the token "write" access (permission)
 ## which you can check through your Twitter account.
@@ -37,7 +43,7 @@ my_screen_name <- token$credentials$screen_name
 my_screen_name
 
 ## Read jeopardy data.
-jeop <- readRDS("../data/joepardy.rds")
+jeop <- readRDS("../data/jeopardy.rds")
 
 ## Posting the CLUE status on Twitter
 ## Randomly select a question.
@@ -67,7 +73,7 @@ if ("used" %in% names(attributes(jeop))) {
 } else {
     ## Create used object.
     used <- data.frame(
-        id = n,
+        id = 1,
         datetime = Sys.time(),
         clue = jeop$clue[i],
         answer = jeop$answer[i])
@@ -77,7 +83,7 @@ if ("used" %in% names(attributes(jeop))) {
 attr(jeop, "used") <- used
 
 ## Save data (dropping the row that was just posted.
-saveRDS(jeop[-i, ], "../data/joepardy.rds")
+saveRDS(jeop[-i, ], "../data/jeopardy.rds")
 
 ## Posting the ANSWER status on Twitter
 ## Get recent timeline data for your account.
@@ -98,4 +104,7 @@ answer <- paste0(
 
 ## Post ANSWER status to Twitter.
 post_tweet(answer, token = token)
+
+## on exit return wd
+setwd(od)
 ```
