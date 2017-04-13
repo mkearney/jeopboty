@@ -2,9 +2,9 @@
 \#jeopboty: a jeopardy twitter bot
 ==================================
 
-I \[scraped Jeopardy clues and answers from an online archive\]\[R/scrape-jeopardy.r\] and created a bot-like script to post them to Twitter.
+I [scraped Jeopardy clues and answers from an online archive](R/scrape-jeopardy.r) and created a bot-like script to post them to Twitter.
 
-The \[bot script\]\[R/jeopboty.r\] can be found in the R folder. It's also pasted below.
+The [bot script](R/jeopboty.r) can be found in the R folder. It's also pasted below.
 
 ``` r
 
