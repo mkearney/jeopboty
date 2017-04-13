@@ -28,7 +28,7 @@ token <- get_tokens()
 ## I have a token I use exclusively for my #jeopboty statuses,
 ## so I've saved that in my data folder (note: token won't
 ## appear in my Github repository; nice try!)
-token <- readRDS("../rtw.rds")
+token <- readRDS("../data/rtw.rds")
 
 ## Get the screen name associated with your token.
 my_screen_name <- token$credentials$screen_name
@@ -77,7 +77,7 @@ if ("used" %in% names(attributes(jeop))) {
 attr(jeop, "used") <- used
 
 ## Save data (dropping the row that was just posted.
-saveRDS(jeop[-i, ], "../r/joepardy.rds")
+saveRDS(jeop[-i, ], "../data/joepardy.rds")
 
 ## Posting the ANSWER status on Twitter
 ## Get recent timeline data for your account.
