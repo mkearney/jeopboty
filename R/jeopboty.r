@@ -1,53 +1,90 @@
+## Reading data and the [correct] Twitter token
+## load rtweet
+library(rtweet)
 
+## If you haven't created and saved a personal access
+## Twitter API token, do it now following these instructions:
+vignette("auth", "rtweet")
 
-#' R code from Rmarkdown file
-#'
-#' Converts Rmarkdown to R script file
-#'
-#' @param x File name of Rmd file
-#' @param verbose Logical indicating whether to print (cat) the
-#'   script code. Defaults to TRUE.
-#' @return String with script syntax.
-rRMD <- function(x, verbose = TRUE) {
-    ## read Rmd file
-    x <- readLines(x)
-    ## remove meta info
-    if ("---" == x[[1]]) x <- x[-c(1:(which(x[-1] == "---") + 1))]
-    ## remove chunk specs
-    x <- lapply(x, function(.) gsub("```.*", "```", .))
-    ## collapse
-    x <- paste(x, collapse = "\n")
-    ## split by tick marks
-    x <- strsplit(x, "```")[[1]]
-    ## select the first in each pair of tick marks
-    comnt <- x[seq(1, NROW(x), 2)]
-    ## select the second in each pair of tick marks
-    rcode <- x[seq(2, NROW(x), 2)]
-    ## if uneven provide blanks
-    if (length(comnt) > length(rcode)) {
-        rcode <- c(rcode, rep("", length(comnt) - length(rcode)))
-    }
-    ## combine each pair into vector and create a list
-    x <- mapply(function(a, b) list(c(a, b)), comnt, rcode,
-                USE.NAMES = FALSE)
-    ## format comments and r code, return string
-    formatrcode <- function(x) {
-        if (grepl("^---", x[[1]])) return("")
-        if (grepl("^\nknitr::opts_chunk", x[[2]])) return("")
-        cmmnt <- gsub("#{2,} ", "", x[[1]])
-        cmmnt <- strsplit(cmmnt, "\n")[[1]]
-        cmmnt <- grep("^<", cmmnt, value = TRUE, invert = TRUE)
-        cmmnt <- paste("##", cmmnt)
-        cmmnt <- cmmnt[cmmnt != "## "]
-        rcode <- gsub("^\n|\n$", "", x[[2]])
-        paste(c(cmmnt, rcode), collapse = "\n")
-    }
-    ## apply formatrcode
-    x <- lapply(x, formatrcode)
-    ## collapse with line breaks
-    x <- paste(x, collapse = "\n\n")
-    ## print if verbose
-    if (verbose) cat(x, fill = TRUE)
-    ## return code string
-    return(invisible(x))
+## Make sure you've given the token "write" access (permission)
+## which you can check through your Twitter account.
+## Uncomment next line to open browser to Twitter's app page.
+## browseURL("https://apps.twitter.com")
+
+## If you already saved your token as an environment variable, you can
+## fetch it using the get_tokens() function.
+token <- get_tokens()
+
+## I have a token I use exclusively for my #jeopboty statuses,
+## so I've saved that in my data folder (note: token won't
+## appear in my Github repository; nice try!)
+token <- readRDS("../data/rtw.rds")
+
+## Get the screen name associated with your token.
+my_screen_name <- token$credentials$screen_name
+
+## This should print out YOUR screen name:
+my_screen_name
+
+## Read jeopardy data.
+jeop <- readRDS("../data/joepardy.rds")
+
+## Posting the CLUE status on Twitter
+## Randomly select a question.
+i <- sample(seq_len(NROW(jeop)), 1L)
+
+## Compose CLUE status.
+clue <- paste0("Clue: ", jeop$clue[i], " #jeopboty")
+
+## Post CLUE status to Twitter.
+post_tweet(clue, token = token)
+
+## Keeping track of questions you've tweeted over time
+## Either extract and update or create "used" data object.
+if ("used" %in% names(attributes(jeop))) {
+    ## Extract used data attribute
+    used <- attr(jeop, "used")
+
+    ## Determine clue [number] n post.
+    n <- NROW(used[["id"]]) + 1L
+
+    ## Update (append) used object
+    used[["id"]][n] <- n
+    used[["datetime"]][n] <- Sys.time()
+    used[["clue"]][n] <- jeop$clue[i]
+    used[["answer"]][n] <- jeop$answer[i]
+
+} else {
+    ## Create used object.
+    used <- data.frame(
+        id = n,
+        datetime = Sys.time(),
+        clue = jeop$clue[i],
+        answer = jeop$answer[i])
 }
+
+## Add "used" data attribute to "jeop" data.
+attr(jeop, "used") <- used
+
+## Save data (dropping the row that was just posted.
+saveRDS(jeop[-i, ], "../data/joepardy.rds")
+
+## Posting the ANSWER status on Twitter
+## Get recent timeline data for your account.
+tw <- get_timeline(my_screen_name)
+
+## Find and return status ID of most recent clue.
+status_id <- tw$status_id[grep("^Clue", tw$text)[1]]
+
+## Use the status ID to create quote link.
+quote <- paste0("https://twitter.com/",
+                my_screen_name,
+                "/status/",
+                status_id)
+
+## Compose ANSWER status.
+answer <- paste0(
+    "Answer: ", jeop$answer[i], " #jeopboty ", quote)
+
+## Post ANSWER status to Twitter.
+post_tweet(answer, token = token)
