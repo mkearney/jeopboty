@@ -1,5 +1,3 @@
-My \#jeopboty bot
-================
 
 \#jeopboty: a jeopardy twitter bot
 ==================================
