@@ -72,7 +72,7 @@ if ("used" %in% names(attributes(jeop))) {
 
 } else {
     ## Create used object.
-    used <- data.frame(
+    used <- list(
         id = 1,
         datetime = Sys.time(),
         clue = jeop$clue[i],
